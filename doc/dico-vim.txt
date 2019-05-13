@@ -8,10 +8,10 @@ License: MIT
 
 CONTENTS                                        *dico-vim-contents*
 
-    1. Overview                        |dico-vim-overview|
-    2. Options                         |dico-vim-options|
-    3. Bindings                        |dico-vim-bindings|
-    4. Commands                        |dico-vim-commands|
+    1. Overview ...................... |dico-vim-overview|
+    2. Options ....................... |dico-vim-options|
+    3. Bindings ...................... |dico-vim-bindings|
+    4. Commands ...................... |dico-vim-commands|
 
 
 ==============================================================================
