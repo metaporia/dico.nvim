@@ -10,7 +10,7 @@
 " FUNCTIONS
 
 " defines word in split of the specified orientation; uses local dicod server
-" if possible, else queries gnu.org.ua
+" if possible, else queries dicoweb.gnu.org.ua
 function! Define(orientation, word, ...)
     if a:0 > 0 " a:1 contains search strategy, see ```man dico``` or ```dico --help```
         let query = "dico -s " . a:1 . " -d* " . "'" . a:word . "'"
@@ -77,7 +77,7 @@ com! -nargs=1 LsSyn :call LsSyn("<args>")
 
 " set to enable keymaps
 if !exists('g:dico_vim_map_keys')
-    let g:dico_vim_map_keys = 1
+    let g:dico_vim_map_keys = 0
 endif
 
 " when keymaps are enabled and no prefix is set, use <leader>
