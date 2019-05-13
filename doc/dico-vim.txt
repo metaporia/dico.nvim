@@ -6,12 +6,12 @@ Version: 0.2.0
 Author: metaporia (gitlab)
 License: MIT
 
-CONTENTS                        *dico-vim-contents*
+CONTENTS                                        *dico-vim-contents*
 
-Overview                        |dico-vim-overview|
-Options                         |dico-vim-options|
-Bindings                        |dico-vim-bindings|
-Commands                        |dico-vim-commands|
+    1. Overview                        |dico-vim-overview|
+    2. Options                         |dico-vim-options|
+    3. Bindings                        |dico-vim-bindings|
+    4. Commands                        |dico-vim-commands|
 
 
 ==============================================================================
@@ -30,54 +30,59 @@ installation of a DICT server (see above).
 synonyms of words.
 
 ==============================================================================
-BINDINGS						*dico-vim-bindings*
+BINDINGS					*dico-vim-bindings*
 
-<prefix>d                       *dico-vim-define-headword*
+<prefix>d                                       *dico-vim-define-headword*
 
-        Calls `Define` fill a horizontal split with the contents of the
-        definition(s) of the headword under the cursor.
+	   Calls `Define` fill a horizontal split with the contents of the
+	   definition(s) of the headword under the cursor.
 
-<prefix>dv                      *dico-vim-define-headword*
+<prefix>dv                                      *dico-vim-define-headword*
 
-        Calls `Define` fill a vertical split with the contents of the
-        definition(s) of the headword under the cursor.
+           Calls `Define` fill a vertical split with the contents of the
+           definition(s) of the headword under the cursor.
 
-<prefix>ls                      *dico-vim-list-synonyms*
+<prefix>ls                                      *dico-vim-list-synonyms*
         
-        List synonyms of word under cursor in a horizontal split.
+           List synonyms of word under cursor in a horizontal split.
 
 
 ==============================================================================
-COMMANDS						*dico-vim-commands*
+COMMANDS					*dico-vim-commands*
 
+						*:Def*
 :Def {headword}
-    define {headword} in horizontal split
+	   Define {headword} in horizontal split.
 
+						*:Defv*
 :Defv {headword}
-    define {headword} in vertical split
+           Define {headword} in vertical split
 
+						*:Defp*
 :Defp {prefix}
-    list words with the specified {prefix}
+           List words with the specified {prefix}.
 
-:Defs {suffix}
-    list words with the specified {suffix}
+						*:Defs*
+:Defs {suffix} 
+	   List words with the specified {suffix}.
 
+						*:LsSyn*
 :LsSyn {headword}
-    list synonyms of {headword} (from moby-thesaurus by default) in horizontal 
-    split
+	   List synonyms of {headword} (from moby-thesaurus by default) in 
+	   horizontal split
 
 
 
 
 ==============================================================================
-OPTIONS				     		*dico-vim-options*
+|OPTIONS|					*dico-vim-options*
 
                                 
-dico_vim_prefix                 *dico-vim-options-prefix*
+dico_vim_prefix                                 *dico-vim-options-prefix*
             
         Replace default <leader> with <prefix> of choice.
 
-dico_vim_map_keys               *dico-vim-options-map-keys*
+dico_vim_map_keys                               *dico-vim-options-map-keys*
     
         Enable default key mappings.
 
