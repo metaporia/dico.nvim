@@ -1,0 +1,102 @@
+*dico-vim.txt*	For Neovim version 0.3.5	Last change: 2019 May 12
+
+(Neo)vim wrapper for dico DICT client
+
+Version: 0.2.0
+Author: metaporia (gitlab)
+License: MIT
+
+CONTENTS                        *dico-vim-contents*
+
+Overview                        |dico-vim-overview|
+Options                         |dico-vim-options|
+Bindings                        |dico-vim-bindings|
+Commands                        |dico-vim-commands|
+
+
+==============================================================================
+OVERVIEW		     			*dico-vim-overview*
+
+
+
+*dico-vim* wraps the *dico* (v2.4) DICT client. Its repository is located at 
+https://gitlab.com/metaporia/dico-vim and the (preferred) containerized 
+DICT server at https://gitlab.com/metaporia/dicod-docker.
+
+*dico-vim* requires verison *dico* v2.4, and is best used with a local
+installation of a DICT server (see above).
+
+*dico-vim* provides functions, keybindings, and commands to define and list
+synonyms of words.
+
+==============================================================================
+BINDINGS						*dico-vim-bindings*
+
+<prefix>d                       *dico-vim-define-headword*
+
+        Calls `Define` fill a horizontal split with the contents of the
+        definition(s) of the headword under the cursor.
+
+<prefix>dv                      *dico-vim-define-headword*
+
+        Calls `Define` fill a vertical split with the contents of the
+        definition(s) of the headword under the cursor.
+
+<prefix>ls                      *dico-vim-list-synonyms*
+        
+        List synonyms of word under cursor in a horizontal split.
+
+
+==============================================================================
+COMMANDS						*dico-vim-commands*
+
+:Def {headword}
+    define {headword} in horizontal split
+
+:Defv {headword}
+    define {headword} in vertical split
+
+:Defp {prefix}
+    list words with the specified {prefix}
+
+:Defs {suffix}
+    list words with the specified {suffix}
+
+:LsSyn {headword}
+    list synonyms of {headword} (from moby-thesaurus by default) in horizontal 
+    split
+
+
+
+
+==============================================================================
+OPTIONS				     		*dico-vim-options*
+
+                                
+dico_vim_prefix                 *dico-vim-options-prefix*
+            
+        Replace default <leader> with <prefix> of choice.
+
+dico_vim_map_keys               *dico-vim-options-map-keys*
+    
+        Enable default key mappings.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:noet:fen:noet:

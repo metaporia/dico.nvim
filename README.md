@@ -32,7 +32,7 @@ shouldn't work with vanilla vim's package management facility.
 ## Configuration
 
 Set `g:dico_vim_map_keys = 1` to override the default and enable the below
-keymappings.
+key-mappings.
 
 Set `g:dico_vim_prefix = <custom-prefix>` to override the default prefix
 `<leader>`; naturally, this setting has no effect if `g:dico_vim_map_keys = 0`.
@@ -41,7 +41,7 @@ Set `g:dico_vim_prefix = <custom-prefix>` to override the default prefix
 
 ## Keymaps
 
-By default `<prefix> = <leader>` in the following keybindings, and all bindings
+By default `<prefix> = <leader>` in the following key-bindings, and all bindings
 work in visual mode on the contents of the current visual selection.
 
 * `<prefix>d`: define headword under cursor in horizontal split
