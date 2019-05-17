@@ -41,7 +41,7 @@ endfunction
 function! DeadBuf(orientation)
     let cmd = "new"
     if a:orientation == "v"
-        let cmd = "vnew"
+        let cmd = "rightbelow vnew"
     endif
     execute cmd . " | setlocal buftype=nofile | setlocal noswapfile"
 endfunction
