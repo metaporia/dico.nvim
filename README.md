@@ -12,7 +12,7 @@ server or (ii) GNU's [DICT server](dicoweb.gnu.org.ua).
 * GNU's DICT client `dico` version >= 2.4.
 
 
-Note that at the momemnt the remote default DICT server (at [dicoweb.gnu.org.ua]()) 
+Note that at the moment the remote default DICT server (at [dicoweb.gnu.org.ua]()) 
 is _not_ configurable.
 
 
