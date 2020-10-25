@@ -1,4 +1,4 @@
-*dico-vim.txt*	For Neovim version 0.3.5	Last change: 2019 May 12
+*dico-vim.txt*  For Neovim version 0.3.5        Last change: 2019 May 12
 
 (Neo)vim wrapper for dico DICT client
 
@@ -15,75 +15,75 @@ CONTENTS                                        *dico-vim-contents*
 
 
 ==============================================================================
-OVERVIEW		     			*dico-vim-overview*
+OVERVIEW                                        *dico-vim-overview*
 
 
 
-*dico-vim* wraps the *dico* (v2.4) DICT client. Its repository is located at 
-https://gitlab.com/metaporia/dico-vim and the (preferred) containerized 
+*dico-vim* wraps the dico (v2.4) DICT client. Its repository is located at
+https://gitlab.com/metaporia/dico-vim and the (preferred) containerized
 DICT server at https://gitlab.com/metaporia/dicod-docker.
 
-*dico-vim* requires verison *dico* v2.4, and is best used with a local
+dico-vim requires verison dico v2.4, and is best used with a local
 installation of a DICT server (see above).
 
-*dico-vim* provides functions, keybindings, and commands to define and list
+dico-vim provides functions, keybindings, and commands to define and list
 synonyms of words.
 
 ==============================================================================
-BINDINGS					*dico-vim-bindings*
+BINDINGS                                        *dico-vim-bindings*
 
 <prefix>d                                       *dico-vim-define-headword*
 
-	   Calls `Define` fill a horizontal split with the contents of the
-	   definition(s) of the headword under the cursor.
+           Calls `Define` fill a horizontal split with the contents of the
+           definition(s) of the headword under the cursor.
 
-<prefix>dv                                      *dico-vim-define-headword*
+<prefix>dv                                      *dico-vim-define-headword-vertical*
 
            Calls `Define` fill a vertical split with the contents of the
            definition(s) of the headword under the cursor.
 
 <prefix>ls                                      *dico-vim-list-synonyms*
-        
+
            List synonyms of word under cursor in a horizontal split.
 
 
 ==============================================================================
-COMMANDS					*dico-vim-commands*
+COMMANDS                                        *dico-vim-commands*
 
-						*:Def*
+                                                *:Def*
 :Def {headword}
-	   Define {headword} in horizontal split.
+           Define {headword} in horizontal split.
 
-						*:Defv*
+                                                *:Defv*
 :Defv {headword}
            Define {headword} in vertical split
 
-						*:Defp*
+                                                *:Defp*
 :Defp {prefix}
            List words with the specified {prefix}.
 
-						*:Defs*
-:Defs {suffix} 
-	   List words with the specified {suffix}.
+                                                *:Defs*
+:Defs {suffix}
+           List words with the specified {suffix}.
 
-						*:LsSyn*
+                                                *:LsSyn*
 :LsSyn {headword}
-	   List synonyms of {headword} (from moby-thesaurus by default) in 
-	   horizontal split
+           List synonyms of {headword} (from moby-thesaurus by default) in
+           horizontal split
 
 
 
 
 ==============================================================================
-|OPTIONS|					*dico-vim-options*
+|OPTIONS|                                       *dico-vim-options*
 
-                                
+
 dico_vim_prefix                                 *dico-vim-options-prefix*
-            
+
         Replace default <leader> with <prefix> of choice.
 
 dico_vim_map_keys                               *dico-vim-options-map-keys*
-    
+
         Enable default key mappings.
 
 
