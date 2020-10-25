@@ -1,18 +1,19 @@
 # dico-vim
 
 What is it? A plugin to provide bindings to query via the dico client (i) a local DICT
-server or (ii) GNU's [DICT server](dicoweb.gnu.org.ua). 
+server or (ii) GNU's [DICT server](dicoweb.gnu.org.ua).
 
 
 ## Dependencies
 
-* ideally (there is a remote default), a local DICT server on the standard port 
-  2628 (see [dicod-docker](https://gitlab.com/metaporia/dicod-docker) for 
+* ideally (there is a remote default), a local DICT server on the standard port
+  2628 (see [dicod-docker](https://gitlab.com/metaporia/dicod-docker) for
   dockerized version of GNU's DICT server dicod v2.4); and
 * GNU's DICT client `dico` version >= 2.4.
+* fold from GNU coreutils
 
 
-Note that at the moment the remote default DICT server (at [dicoweb.gnu.org.ua]()) 
+Note that at the moment the remote default DICT server (at [dicoweb.gnu.org.ua]())
 is _not_ configurable.
 
 
@@ -24,7 +25,7 @@ Add the following to your [neo]vim dotfile:
 Plug "https://gitlab.com/metaporia/dico-vim"
 ```
 
-I have not tested `dico-vim` with other plugin managers. Its directory structure 
+I have not tested `dico-vim` with other plugin managers. Its directory structure
 does, however, conform to pathogen's specification; and I see no reason why it
 shouldn't work with vanilla vim's package management facility.
 

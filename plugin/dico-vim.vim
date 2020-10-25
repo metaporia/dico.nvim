@@ -15,7 +15,7 @@ function! Define(orientation, word, ...)
     if a:0 > 0 " a:1 contains search strategy, see ```man dico``` or ```dico --help```
         let query = "dico -s " . a:1 . " -d* " . "'" . a:word . "'"
     else
-        let query = "dico " . '-- "' . a:word . '"' . ' | fmt' 
+        let query = "dico " . '-- "' . a:word . '"' . ' | fold' 
     endif
     echo query
     let definitions = system(query) 
