@@ -60,17 +60,17 @@ endfunc
 " COMMANDS
 
 " define word in horizontal split
-com! -nargs=1 Def :call Define("h", "<args>")
+com! -nargs=1 Def :silent call Define("h", "<args>")
 " define word in vertical split
-com! -nargs=1 Defv :call Define("v", "<args>")
+com! -nargs=1 Defv :silent call Define("v", "<args>")
 
 " list all words in GCIDE prefixed by the given argument
-com! -nargs=* Defp :call Define("h", "<args>", "prefix")
+com! -nargs=* Defp :silent call Define("h", "<args>", "prefix")
 " list all words in GCIDE suffixed by the given argument
-com! -nargs=* Defs :call Define("h", "<args>", "suffix")
+com! -nargs=* Defs :silent call Define("h", "<args>", "suffix")
 
 " TODO add option to list synonyms in vertical split
-com! -nargs=1 LsSyn :call LsSyn("<args>")
+com! -nargs=1 LsSyn :silent call LsSyn("<args>")
 
 
 " KEYMAPS
