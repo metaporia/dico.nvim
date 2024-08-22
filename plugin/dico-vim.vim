@@ -86,13 +86,13 @@ if !exists('g:dico_vim_prefix')
 endif
 
 if g:dico_vim_map_keys
-    execute "nnoremap <silent>" . g:dico_vim_prefix."d :call Define('h', expand('<cword>'))<CR>"
-    execute "vnoremap <silent>".  g:dico_vim_prefix."d :call Define('h', GetSelectedText())<CR>"
+    execute "nnoremap <silent>" . g:dico_vim_prefix."d :silent call Define('h', expand('<cword>'))<CR>"
+    execute "vnoremap <silent>".  g:dico_vim_prefix."d :silent call Define('h', GetSelectedText())<CR>"
 
-    execute "nnoremap <silent>" . g:dico_vim_prefix."dv  :call Define('v', expand('<cword>'))<CR>"
-    execute "vnoremap <silent>" . g:dico_vim_prefix."dv :call Define('v', GetSelectedText())<CR>"
+    execute "nnoremap <silent>" . g:dico_vim_prefix."dv  :silent call Define('v', expand('<cword>'))<CR>"
+    execute "vnoremap <silent>" . g:dico_vim_prefix."dv :silent call Define('v', GetSelectedText())<CR>"
 
-    execute "nnoremap <silent>" . g:dico_vim_prefix."ls :call LsSyn(expand('<cword>'))<CR>"
-    execute "vnoremap <silent>" . g:dico_vim_prefix."ls :call LsSyn(GetSelectedText())<CR>"
+    execute "nnoremap <silent>" . g:dico_vim_prefix."ls :silent call LsSyn(expand('<cword>'))<CR>"
+    execute "vnoremap <silent>" . g:dico_vim_prefix."ls :silent call LsSyn(GetSelectedText())<CR>"
 
 endif
