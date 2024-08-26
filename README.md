@@ -1,17 +1,23 @@
 # dico-vim
 
-What is it? A plugin to provide bindings to query via the dico client (i) a local DICT
-server or (ii) GNU's [DICT server](dicoweb.gnu.org.ua).
+What is it? A plugin to provide bindings to query via the dico client either
+(i) a local DICT server or (ii) GNU's [DICT server](dicoweb.gnu.org.ua).
 
 
 ## Dependencies
 
-* ideally (there is a remote default), a local DICT server on the standard port
-  2628 (see [dicod-docker](https://gitlab.com/metaporia/dicod-docker) for
+* Ideally (there is a remote default), a local DICT server on the standard port
+  2628  for
   dockerized version of GNU's DICT server dicod v2.4); and
 * GNU's DICT client `dico` version >= 2.4.
 * fold from GNU coreutils
 
+
+[!NOTE] There are two ready-made dicod servers pre-configured with good
+dictionaries:
+- [dicod-docker](https://github.com/metaporia/dot/tree/489cd70eae8eb4b48b4b02637578d216d76b759f/overlays/dico),
+  a dockerized DICT server; and
+- a nixpkgs [overlay](https://github.com/metaporia/dot/) and [nixos module](https://github.com/metaporia/dot/blob/489cd70eae8eb4b48b4b02637578d216d76b759f/home/modules/dicod.nix)
 
 Note that at the moment the remote default DICT server (at [dicoweb.gnu.org.ua]())
 is _not_ configurable.
