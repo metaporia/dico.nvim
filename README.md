@@ -34,17 +34,13 @@ Add the following to your [neo]vim dotfile:
 <details>
     <summary>With <a href="https://github.com/junegunn/vim-plug">junegunn/vim-plug</a>
     </summary>
-```vim
-Plug "metaporia/dico.nvim"
-```
+    <code>Plug "metaporia/dico.nvim"</code>
 </details>
 
 <details>
     <summary>With <a href="https://github.com/folke/lazy.nvim">folke/lazy.nvim</a>
     </summary>
-```vim
-{ "metaporia/dico.nvim", config = true}
-```
+    <code>{ "metaporia/dico.nvim", config = true}</code>
 </details>
 
 ## Configuration
@@ -55,9 +51,9 @@ See the [helpfile](doc/dico.nvim.txt) `:h dico.nvim` for more details.
 
 ```lua
 {
-	default_split = "h", -- window split orientation
-	map_prefix = "<leader>", -- default prefix for keymappings
-	enable_nofile = false, -- Expose user command `Nofile` used to open scratch buffer
+    default_split = "h", -- window split orientation
+    map_prefix = "<leader>", -- default prefix for keymappings
+    enable_nofile = false, -- Expose user command `Nofile` used to open scratch buffer
     fallback_dict_server = "gnu.org.ua" -- remote fallback DICT server
 }
 
