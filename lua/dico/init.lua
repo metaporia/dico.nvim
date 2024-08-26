@@ -1,28 +1,62 @@
+---
+--- *dico.nvim* Neovim wrapper for dico DICT client
+--- *dico*
+---
+--- MIT License Copyright (c) 2024 Keane Yahn-Krafft
+---
+--- ==============================================================================
+---
+--- Overview:
+--- dico.nvim wraps the dico  DICT client. Its repository is located at
+--- https://github.com/metaporia/dico.nvim and the (preferred) containerized
+--- DICT server at https://gitlab.com/metaporia/dicod-docker.
+---
+--- Dependencies:
+---
+--- - dico (>2.4), and is best used with a local
+---  installation of a DICT server (see above).
+---
+--- What it does:
+--- - dico.nvim provides functions, keybindings, and commands to define and list
+---   synonyms of words.
+---
+--- Setup:
+--- - This module needs a `require('dico').setup({})`, where `{}` contains any
+---   non-default config with which to override the default configuration.
+---
+---@toc
+
 local M = {}
 
+--- *Module config*
+---
+--- Default config:
+---
 ---@class DicoOptions
----@field default_split string
----@field enable_nofile boolean
----@field prefix string prefix for mappings, defaults to <leader>
-
+---@field default_split string Whether to open definitions in vertical or
+--- horizontal split. One of 'h' or 'v'. Defaults to 'h'.
+---@field enable_nofile boolean Defaults to false.
+---@field prefix string Prefix for mappings, defaults to <leader>
+---
+--- Initialize opts used to default. User set opts will be merged in `M.setup`.
+---@tag DicoOptions
+---@eval return MiniDoc.afterlines_to_code(MiniDoc.current.eval_section)
+--minidoc_replace_start opts = {
 local default_opts = {
+	--minidoc_replace_end
 	default_split = "h",
 	enable_nofile = false, -- by default disable creating `Nofile` command
 	map_prefix = "<leader>",
 }
+--minidoc_afterlines_end
 
-local function merge_defaults(opts)
-	return vim.tbl_deep_extend("force", default_opts, opts)
-end
-
---- Initialize opts used to default. User set opts will be merged during
---- `M.setup`.
 local opts = default_opts
 
----@alias orientation
----| '"h"' # horizontal split
----| '"v"' # vertical split
+local function merge_defaults(options)
+	return vim.tbl_deep_extend("force", default_opts, options)
+end
 
+--- Toggle split orientation
 local function toggle_orientation(o)
 	if o == "h" then
 		return "v"
@@ -35,8 +69,7 @@ end
 -- orientation:
 --   * "v" sets vertical
 --   * otherwise defaults to horizontal
-
----@param orientation orientation
+--@param orientation orientation
 local function read_only_buffer(orientation)
 	orientation = orientation or opts.default_split
 	--vim.print("Opening read only buffer")
@@ -55,6 +88,8 @@ local function read_only_buffer(orientation)
 	return buf
 end
 
+--- Open scratch buf for definition
+---@param orientation orientation
 local function dead_buf(orientation)
 	orientation = orientation or opts.default_split
 	local vertical = false
@@ -67,11 +102,34 @@ local function dead_buf(orientation)
 	return buf
 end
 
+--- Open scratch buffer with synonyms of `word`. Takes optional `orientation`.
+---@param word string Word to define
+---@param orientation string? orientation. If nil, uses default or 'opts.default_split'
+local function list_synonyms(word, orientation)
+	orientation = orientation or opts.default_split
+	local sedFilter = " | sed 's/,/\\n/g' | sed 's/\\s//g' | sed -e '/^[[:space:]]*$/d'"
+	local query = "dico " .. "-dmoby-thesaurus '" .. word .. "'" .. sedFilter
+	local buf = dead_buf(orientation)
+	local synonyms = vim.fn.systemlist(query)
+	vim.api.nvim_buf_set_lines(buf, 0, -1, false, synonyms)
+	vim.cmd.normal("gg4dj")
+end
+
+local function get_selected_text()
+	local ss = vim.fn.getregion(vim.fn.getpos("v"), vim.fn.getpos("."))
+	return table.concat(ss, "\n")
+end
+
 --dead_buf("h")
 
+--- Open definition of 'word' in a split (according to 'orientation', or, if
+--- it's nil, 'opts.default_split'). Optionally pass a dico search strategy
+--- with 'search_strategy'.
+---
 ---@param word string
 ---@param orientation orientation
----@param search_strategy string?
+---@param search_strategy? string
+---
 local function define(word, orientation, search_strategy)
 	orientation = orientation or opts.default_split
 	-- handle optional param
@@ -89,20 +147,10 @@ local function define(word, orientation, search_strategy)
 	vim.api.nvim_buf_set_lines(def_buf, 0, -1, false, definitions)
 end
 
-local function list_synonyms(word, orientation)
-	orientation = orientation or opts.default_split
-	local sedFilter = " | sed 's/,/\\n/g' | sed 's/\\s//g' | sed -e '/^[[:space:]]*$/d'"
-	local query = "dico " .. "-dmoby-thesaurus '" .. word .. "'" .. sedFilter
-	local buf = dead_buf(orientation)
-	local synonyms = vim.fn.systemlist(query)
-	vim.api.nvim_buf_set_lines(buf, 0, -1, false, synonyms)
-	vim.cmd.normal("gg4dj")
-end
-
-local function get_selected_text()
-	local ss = vim.fn.getregion(vim.fn.getpos("v"), vim.fn.getpos("."))
-	return table.concat(ss, "\n")
-end
+--- *Orientation*
+---@alias orientation
+---| '"h"' - horizontal split
+---| '"v"' - vertical split
 
 --list_synonyms("h", "hello")
 --define("h", "pernicious")
@@ -126,31 +174,30 @@ local function bind_list_synonyms()
 	end, { nargs = 1 }) -- allow exactly zero arguments
 end
 
-
 -- keymaps
 local function set_keymaps(prefix)
-	vim.keymap.set("n", prefix .. prefix .. "dd", function()
+	vim.keymap.set("n", prefix .. "dd", function()
 		--vim.print(vim.fn.expand("<cWORD>"))
 		define(vim.fn.expand("<cWORD>"), opts.default_split, nil)
 	end, { desc = "Define <cWORD> (dico)" })
 
-	vim.keymap.set("v", prefix .. prefix .. "dd", function()
+	vim.keymap.set("v", prefix .. "dd", function()
 		define(get_selected_text(), opts.default_split)
 	end, { desc = "Define visual selection" })
 
-	vim.keymap.set("n", prefix .. prefix .. "da", function()
+	vim.keymap.set("n", prefix .. "da", function()
 		define(vim.fn.expand("<cWORD>"), toggle_orientation(opts.default_split))
 	end, { desc = "Define <cWORD> in alternate split (dico)" })
 
-	vim.keymap.set("v", prefix .. prefix .. "da", function()
+	vim.keymap.set("v", prefix .. "da", function()
 		define(get_selected_text(), toggle_orientation(opts.default_split))
 	end, { desc = "Define visual selection in alternate split (dico)" })
 
-	vim.keymap.set("n", prefix .. prefix .. "ds", function()
+	vim.keymap.set("n", prefix .. "ds", function()
 		list_synonyms(vim.fn.expand("<cWORD>"), opts.default_split)
 	end, { desc = "List synonyms (dico)" })
 
-	vim.keymap.set("v", prefix .. prefix .. "ds", function()
+	vim.keymap.set("v", prefix .. "ds", function()
 		list_synonyms(get_selected_text(), opts.default_split)
 	end, { desc = "List synonyms of visual selection (dico)" })
 end

@@ -1,0 +1,99 @@
+==============================================================================
+------------------------------------------------------------------------------
+
+*dico.nvim* Neovim wrapper for dico DICT client
+*dico*
+
+MIT License Copyright (c) 2024 Keane Yahn-Krafft
+
+==============================================================================
+
+Overview:
+dico.nvim wraps the dico  DICT client. Its repository is located at
+https://github.com/metaporia/dico.nvim and the (preferred) containerized
+DICT server at https://gitlab.com/metaporia/dicod-docker.
+
+Dependencies:
+
+- dico (>2.4), and is best used with a local
+ installation of a DICT server (see above).
+
+What it does:
+- dico.nvim provides functions, keybindings, and commands to define and list
+  synonyms of words.
+
+Setup:
+- This module needs a `require('dico').setup({})`, where `{}` contains any
+  non-default config with which to override the default configuration.
+
+
+------------------------------------------------------------------------------
+                                                                   *DicoOptions*
+*Module config*
+
+Default config:
+
+Class ~
+{DicoOptions}
+Fields ~
+{default_split} `(string)` Whether to open definitions in vertical or
+horizontal split. One of 'h' or 'v'. Defaults to 'h'.
+{enable_nofile} `(boolean)` Defaults to false.
+{prefix} `(string)` Prefix for mappings, defaults to <leader>
+
+Initialize opts used to default. User set opts will be merged in `M.setup`.
+>
+  opts = {
+  	default_split = "h",
+  	enable_nofile = false, -- by default disable creating `Nofile` command
+  	map_prefix = "<leader>",
+  }
+<
+
+------------------------------------------------------------------------------
+                                                          *toggle_orientation()*
+                           `toggle_orientation`({o})
+Toggle split orientation
+
+------------------------------------------------------------------------------
+                                                                    *dead_buf()*
+                           `dead_buf`({orientation})
+Open scratch buf for definition
+Parameters ~
+{orientation} orientation
+
+------------------------------------------------------------------------------
+                                                               *list_synonyms()*
+                     `list_synonyms`({word}, {orientation})
+Open scratch buffer with synonyms of `word`. Takes optional `orientation`.
+Parameters ~
+{word} `(string)` Word to define
+{orientation} `(string?)` orientation. If nil, uses default or 'opts.default_split'
+
+------------------------------------------------------------------------------
+                                                                      *define()*
+               `define`({word}, {orientation}, {search_strategy})
+Open definition of 'word' in a split (according to 'orientation', or, if
+it's nil, 'opts.default_split'). Optionally pass a dico search strategy
+with 'search_strategy'.
+
+Parameters ~
+{word} `(string)`
+{orientation} orientation
+{search_strategy} `(optional)` `(string)`
+
+
+------------------------------------------------------------------------------
+*Orientation*
+'"h"' - horizontal split
+'"v"' - vertical split
+
+------------------------------------------------------------------------------
+                                                                     *M.setup()*
+                              `M.setup`({options})
+Pass `DicoOptions` to `setup` in order to overrite default configuration.
+Parameters ~
+{options} DicoOptions
+
+
+ vim:tw=78:ts=8:noet:ft=help:norl:
