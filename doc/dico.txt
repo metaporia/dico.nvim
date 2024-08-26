@@ -1,9 +1,5 @@
-==============================================================================
-------------------------------------------------------------------------------
-                                                                             *M*
-                                      `M`
-
 *dico.nvim* Neovim wrapper for dico DICT client
+*dico*
 
 MIT License Copyright (c) 2024 Keane Yahn-Krafft
 
@@ -14,6 +10,7 @@ dico.nvim wraps the dico  DICT client. Its repository is located at
 https://github.com/metaporia/dico.nvim and the (preferred) containerized
 DICT server at https://gitlab.com/metaporia/dicod-docker.
 
+------------------------------------------------------------------------------
 Dependencies:
 
 - dico (>2.4), and is best used with a local installation of a DICT server
@@ -26,7 +23,6 @@ What it does:
 Setup:
 - This module needs a `require('dico').setup({})`, where `{}` contains any
   non-default config with which to override the default configuration.
-
 
 ------------------------------------------------------------------------------
 Module config
@@ -48,6 +44,7 @@ Initialize opts used to default. User set opts will be merged in `M.setup`.
   	default_split = "h", -- window split orientation
   	enable_nofile = false, -- by default disable creating `Nofile` command
   	map_prefix = "<leader>", -- default prefix for keymappings
+  	fallback_dict_server = "gnu.org.ua", -- remote fallback DICT server
   }
 <
 
@@ -79,22 +76,41 @@ Parameters ~
 
 ------------------------------------------------------------------------------
 
-Commands ~
-                                                                         *:Def*
+*COMMANDS*                                                         *dico-commands*
+                                                                          *:Def*
 :Def {headword}
-           Define {headword} in split. Uses `opts.default_split` to determine 
+           Define {headword} in split. Uses `opts.default_split` to determine
            whether split is horizontal or vertical.
 
-                                                                        *:DefA*
+                                                                         *:DefA*
 :DefA {headword}
-           Define {headword} in alternate split. 
-           If `opts.default_split = "h"`, then `DefA` would open a vertical 
+           Define {headword} in alternate split.
+           If `opts.default_split = "h"`, then `:DefA` would open a vertical
            split.
 
-                                                                        *:Defs*
+                                                                         *:Defs*
 :LsSyn {headword}
-           List synonyms of {headword} (from moby-thesaurus by default) 
+           List synonyms of {headword} (from moby-thesaurus by default)
            in horizontal split
+
+------------------------------------------------------------------------------
+
+KEYMAPS                                                           *dico-keymaps*
+
+<prefix>d
+
+           Calls `Define` fill a horizontal split with the contents of the
+           definition(s) of the headword under the cursor.
+
+<prefix>dv
+
+           Calls `Define` fill a vertical split with the contents of the
+           definition(s) of the headword under the cursor.
+
+<prefix>ls
+
+           List synonyms of word under cursor in a horizontal split.
+
 
 ------------------------------------------------------------------------------
                                                                      *M.setup()*

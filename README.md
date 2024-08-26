@@ -49,7 +49,7 @@ Plug "metaporia/dico.nvim"
 
 ## Configuration
 
-See the [helpfile](doc/dico-nvim.txt) `:h dico.nvim` for more details.
+See the [helpfile](doc/dico.nvim.txt) `:h dico.nvim` for more details.
 
 ### Default Configuration
 
@@ -58,6 +58,7 @@ See the [helpfile](doc/dico-nvim.txt) `:h dico.nvim` for more details.
 	default_split = "h", -- window split orientation
 	map_prefix = "<leader>", -- default prefix for keymappings
 	enable_nofile = false, -- Expose user command `Nofile` used to open scratch buffer
+    fallback_dict_server = "gnu.org.ua" -- remote fallback DICT server
 }
 
 ```
@@ -68,18 +69,18 @@ By default `<prefix> = <leader>` in the following key-bindings, and all bindings
 work in visual mode on the contents of the current visual selection.
 
 * `<prefix>d`: define headword under cursor in horizontal split
-* `<prefix>dv`: define headword in vertical split
+* `<prefix>da`: define headword in alternate split (if `opts.default_split` is
+  `"h"`, then this would open a vertical split).
 
 
-* `<prefix>ls` : list synonyms in horizontal split
+* `<prefix>ls` : list synonyms in default split
 
 ## Commands
 
-* `Def <headword>`: define `<headword>` in horizontal split
-* `Defv <headword>`: define `<headword>` in vertical split
-* `Defp <prefix>`: list words with the specified prefix
-* `Defs <suffix>`: list words with the specified suffix
-* `LsSyn <headword>` : list synonyms (from moby-thesaurus by default) in horizontal split
+* `Def <headword>`: define `<headword>` in default split
+* `DefA <headword>`: define `<headword>` in alternate split
+* `LsSyn <headword>` : list synonyms (from moby-thesaurus by default) in
+  default split
 
 
 

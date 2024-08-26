@@ -1,5 +1,5 @@
----
 --- *dico.nvim* Neovim wrapper for dico DICT client
+--- *dico*
 ---
 --- MIT License Copyright (c) 2024 Keane Yahn-Krafft
 ---
@@ -9,7 +9,7 @@
 --- dico.nvim wraps the dico  DICT client. Its repository is located at
 --- https://github.com/metaporia/dico.nvim and the (preferred) containerized
 --- DICT server at https://gitlab.com/metaporia/dicod-docker.
----
+
 --- Dependencies:
 ---
 --- - dico (>2.4), and is best used with a local installation of a DICT server
@@ -22,8 +22,9 @@
 --- Setup:
 --- - This module needs a `require('dico').setup({})`, where `{}` contains any
 ---   non-default config with which to override the default configuration.
----
----@toc
+
+--- module
+---@private
 local M = {}
 
 --- Module config
@@ -45,6 +46,7 @@ local default_opts = {
 	default_split = "h", -- window split orientation
 	enable_nofile = false, -- by default disable creating `Nofile` command
 	map_prefix = "<leader>", -- default prefix for keymappings
+	fallback_dict_server = "gnu.org.ua", -- remote fallback DICT server
 }
 --minidoc_afterlines_end
 
@@ -111,7 +113,7 @@ local function define(word, orientation, search_strategy)
 	orientation = orientation or opts.default_split
 	-- handle optional param
 	if search_strategy then
-		search_strategy = "-s " .. search_strategy
+		search_strategy = " -s " .. search_strategy
 	else
 		search_strategy = ""
 	end
@@ -119,10 +121,25 @@ local function define(word, orientation, search_strategy)
 		.. search_strategy
 		.. " '"
 		.. word
-		.. "'"
+		.. "' "
 		.. " | fold"
 	-- get definitions
 	local definitions = vim.fn.systemlist(query)
+	-- check for query error and if so use remote fallback
+	if
+		definitions
+		== "dict (client_read_status): Error reading from socket\nclient_read_status: Success\n"
+	then
+		local remote_query = "dico --host "
+			.. opts.fallback_dict_server
+			.. search_strategy
+			.. " '"
+			.. word
+			.. "' "
+			.. " | fold"
+		definitions = vim.fn.systemlist(remote_query)
+	end
+
 	-- open scratch buffer
 	local def_buf = dead_buf(orientation)
 	-- write definitions to buffer
@@ -137,32 +154,30 @@ end
 --list_synonyms("h", "hello")
 --define("h", "pernicious")
 
-
----@text 
---- Commands ~
----                                                                          *:Def*
+---@text
+--- *COMMANDS*                                                         *dico-commands*
+---                                                                           *:Def*
 --- :Def {headword}
----            Define {headword} in split. Uses `opts.default_split` to determine 
+---            Define {headword} in split. Uses `opts.default_split` to determine
 ---            whether split is horizontal or vertical.
---- 
----                                                                         *:DefA*
+---
+---                                                                          *:DefA*
 --- :DefA {headword}
----            Define {headword} in alternate split. 
----            If `opts.default_split = "h"`, then `:DefA` would open a vertical 
+---            Define {headword} in alternate split.
+---            If `opts.default_split = "h"`, then `:DefA` would open a vertical
 ---            split.
---- 
----                                                                         *:Defs*
+---
+---                                                                          *:Defs*
 --- :LsSyn {headword}
----            List synonyms of {headword} (from moby-thesaurus by default) 
+---            List synonyms of {headword} (from moby-thesaurus by default)
 ---            in horizontal split
 
 -- TODO:
 --
---                                                                         *:Defp*
+--                                                                          *:Defp*
 -- :Defp {prefix}
 --            List words with the specified {prefix}.
--- 
-
+--
 
 -- User commands
 local function bind_nofile()
@@ -172,7 +187,6 @@ local function bind_nofile()
 end
 
 local function bind_define()
-
 	vim.api.nvim_create_user_command("Def", function(options)
 		define(options.fargs[1], opts.default_split)
 	end, { nargs = 1 }) -- allow exactly zero arguments
@@ -180,8 +194,6 @@ local function bind_define()
 	vim.api.nvim_create_user_command("DefA", function(options)
 		define(options.fargs[1], toggle_orientation(opts.default_split))
 	end, { nargs = 1 }) -- allow exactly zero arguments
-
-
 end
 
 local function bind_list_synonyms()
@@ -189,6 +201,24 @@ local function bind_list_synonyms()
 		list_synonyms(options.fargs[1], opts.default_split)
 	end, { nargs = 1 }) -- allow exactly zero arguments
 end
+
+---@text
+--- KEYMAPS                                                           *dico-keymaps*
+---
+--- <prefix>d
+---
+---            Calls `Define` fill a horizontal split with the contents of the
+---            definition(s) of the headword under the cursor.
+---
+--- <prefix>dv
+---
+---            Calls `Define` fill a vertical split with the contents of the
+---            definition(s) of the headword under the cursor.
+---
+--- <prefix>ls
+---
+---            List synonyms of word under cursor in a horizontal split.
+---
 
 -- keymaps
 local function set_keymaps(prefix)
@@ -212,11 +242,11 @@ local function set_keymaps(prefix)
 		define(get_selected_text(), toggle_orientation(opts.default_split))
 	end, { desc = "Define visual selection in alternate split (dico)" })
 
-	vim.keymap.set("n", prefix .. "ds", function()
+	vim.keymap.set("n", prefix .. "ls", function()
 		list_synonyms(vim.fn.expand("<cWORD>"), opts.default_split)
 	end, { desc = "List synonyms (dico)" })
 
-	vim.keymap.set("v", prefix .. "ds", function()
+	vim.keymap.set("v", prefix .. "ls", function()
 		list_synonyms(get_selected_text(), opts.default_split)
 	end, { desc = "List synonyms of visual selection (dico)" })
 end
@@ -230,12 +260,12 @@ function M.setup(options)
 		bind_nofile()
 	end
 	bind_define()
-  bind_list_synonyms()
+	bind_list_synonyms()
 	-- keymaps
 	set_keymaps(opts.map_prefix)
 end
 
---M.setup(default_opts)
+M.setup(default_opts)
 M.define = define
 M.list_synonyms = list_synonyms
 
