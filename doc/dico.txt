@@ -1,8 +1,6 @@
 ==============================================================================
 ------------------------------------------------------------------------------
-
 *dico.nvim* Neovim wrapper for dico DICT client
-*dico*
 
 MIT License Copyright (c) 2024 Keane Yahn-Krafft
 
@@ -28,8 +26,7 @@ Setup:
 
 
 ------------------------------------------------------------------------------
-                                                                   *DicoOptions*
-*Module config*
+Module config
 
 Default config:
 
@@ -41,12 +38,13 @@ horizontal split. One of 'h' or 'v'. Defaults to 'h'.
 {enable_nofile} `(boolean)` Defaults to false.
 {prefix} `(string)` Prefix for mappings, defaults to <leader>
 
+------------------------------------------------------------------------------
 Initialize opts used to default. User set opts will be merged in `M.setup`.
 >
   opts = {
-  	default_split = "h",
+  	default_split = "h", -- window split orientation
   	enable_nofile = false, -- by default disable creating `Nofile` command
-  	map_prefix = "<leader>",
+  	map_prefix = "<leader>", -- default prefix for keymappings
   }
 <
 
