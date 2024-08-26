@@ -1,5 +1,8 @@
 ==============================================================================
 ------------------------------------------------------------------------------
+                                                                             *M*
+                                      `M`
+
 *dico.nvim* Neovim wrapper for dico DICT client
 
 MIT License Copyright (c) 2024 Keane Yahn-Krafft
@@ -13,8 +16,8 @@ DICT server at https://gitlab.com/metaporia/dicod-docker.
 
 Dependencies:
 
-- dico (>2.4), and is best used with a local
- installation of a DICT server (see above).
+- dico (>2.4), and is best used with a local installation of a DICT server
+ (see above).
 
 What it does:
 - dico.nvim provides functions, keybindings, and commands to define and list
@@ -38,8 +41,8 @@ horizontal split. One of 'h' or 'v'. Defaults to 'h'.
 {enable_nofile} `(boolean)` Defaults to false.
 {prefix} `(string)` Prefix for mappings, defaults to <leader>
 
-------------------------------------------------------------------------------
 Initialize opts used to default. User set opts will be merged in `M.setup`.
+@tag DicoOptions
 >
   opts = {
   	default_split = "h", -- window split orientation
@@ -47,18 +50,6 @@ Initialize opts used to default. User set opts will be merged in `M.setup`.
   	map_prefix = "<leader>", -- default prefix for keymappings
   }
 <
-
-------------------------------------------------------------------------------
-                                                          *toggle_orientation()*
-                           `toggle_orientation`({o})
-Toggle split orientation
-
-------------------------------------------------------------------------------
-                                                                    *dead_buf()*
-                           `dead_buf`({orientation})
-Open scratch buf for definition
-Parameters ~
-{orientation} orientation
 
 ------------------------------------------------------------------------------
                                                                *list_synonyms()*
@@ -85,6 +76,25 @@ Parameters ~
 *Orientation*
 '"h"' - horizontal split
 '"v"' - vertical split
+
+------------------------------------------------------------------------------
+
+Commands ~
+                                                                         *:Def*
+:Def {headword}
+           Define {headword} in split. Uses `opts.default_split` to determine 
+           whether split is horizontal or vertical.
+
+                                                                        *:DefA*
+:DefA {headword}
+           Define {headword} in alternate split. 
+           If `opts.default_split = "h"`, then `DefA` would open a vertical 
+           split.
+
+                                                                        *:Defs*
+:LsSyn {headword}
+           List synonyms of {headword} (from moby-thesaurus by default) 
+           in horizontal split
 
 ------------------------------------------------------------------------------
                                                                      *M.setup()*

@@ -1,6 +1,5 @@
 ---
 --- *dico.nvim* Neovim wrapper for dico DICT client
---- *dico*
 ---
 --- MIT License Copyright (c) 2024 Keane Yahn-Krafft
 ---
@@ -13,8 +12,8 @@
 ---
 --- Dependencies:
 ---
---- - dico (>2.4), and is best used with a local
----  installation of a DICT server (see above).
+--- - dico (>2.4), and is best used with a local installation of a DICT server
+---  (see above).
 ---
 --- What it does:
 --- - dico.nvim provides functions, keybindings, and commands to define and list
@@ -25,10 +24,9 @@
 ---   non-default config with which to override the default configuration.
 ---
 ---@toc
-
 local M = {}
 
---- *Module config*
+--- Module config
 ---
 --- Default config:
 ---
@@ -39,7 +37,7 @@ local M = {}
 ---@field prefix string Prefix for mappings, defaults to <leader>
 ---
 --- Initialize opts used to default. User set opts will be merged in `M.setup`.
----@tag DicoOptions
+--- @tag DicoOptions
 ---@eval return MiniDoc.afterlines_to_code(MiniDoc.current.eval_section)
 --minidoc_replace_start opts = {
 local default_opts = {
@@ -52,11 +50,13 @@ local default_opts = {
 
 local opts = default_opts
 
+---@private
 local function merge_defaults(options)
 	return vim.tbl_deep_extend("force", default_opts, options)
 end
 
 --- Toggle split orientation
+---@private
 local function toggle_orientation(o)
 	if o == "h" then
 		return "v"
@@ -65,31 +65,9 @@ local function toggle_orientation(o)
 	end
 end
 
--- Open unwritable buffer in horizontal or vertical split according to the
--- orientation:
---   * "v" sets vertical
---   * otherwise defaults to horizontal
---@param orientation orientation
-local function read_only_buffer(orientation)
-	orientation = orientation or opts.default_split
-	--vim.print("Opening read only buffer")
-	local cmd = "new"
-	if orientation == "v" then
-		cmd = "rightbelow vnew"
-	end
-	vim.cmd(cmd)
-	-- create 'nofile', ie, unwriteable, ephemeral buffer
-	local buf = vim.api.nvim_get_current_buf()
-
-	--vim.api.nvim_buf_set_name(buf, "dico")
-	vim.api.nvim_set_option_value("buftype", "nofile", { buf = buf })
-	vim.api.nvim_set_option_value("swapfile", false, { buf = buf })
-
-	return buf
-end
-
 --- Open scratch buf for definition
 ---@param orientation orientation
+---@private
 local function dead_buf(orientation)
 	orientation = orientation or opts.default_split
 	local vertical = false
@@ -107,7 +85,8 @@ end
 ---@param orientation string? orientation. If nil, uses default or 'opts.default_split'
 local function list_synonyms(word, orientation)
 	orientation = orientation or opts.default_split
-	local sedFilter = " | sed 's/,/\\n/g' | sed 's/\\s//g' | sed -e '/^[[:space:]]*$/d'"
+	local sedFilter =
+		" | sed 's/,/\\n/g' | sed 's/\\s//g' | sed -e '/^[[:space:]]*$/d'"
 	local query = "dico " .. "-dmoby-thesaurus '" .. word .. "'" .. sedFilter
 	local buf = dead_buf(orientation)
 	local synonyms = vim.fn.systemlist(query)
@@ -119,8 +98,6 @@ local function get_selected_text()
 	local ss = vim.fn.getregion(vim.fn.getpos("v"), vim.fn.getpos("."))
 	return table.concat(ss, "\n")
 end
-
---dead_buf("h")
 
 --- Open definition of 'word' in a split (according to 'orientation', or, if
 --- it's nil, 'opts.default_split'). Optionally pass a dico search strategy
@@ -138,7 +115,12 @@ local function define(word, orientation, search_strategy)
 	else
 		search_strategy = ""
 	end
-	local query = "dico " .. search_strategy .. " '" .. word .. "'" .. " | fold"
+	local query = "dico "
+		.. search_strategy
+		.. " '"
+		.. word
+		.. "'"
+		.. " | fold"
 	-- get definitions
 	local definitions = vim.fn.systemlist(query)
 	-- open scratch buffer
@@ -155,6 +137,33 @@ end
 --list_synonyms("h", "hello")
 --define("h", "pernicious")
 
+
+---@text 
+--- Commands ~
+---                                                                          *:Def*
+--- :Def {headword}
+---            Define {headword} in split. Uses `opts.default_split` to determine 
+---            whether split is horizontal or vertical.
+--- 
+---                                                                         *:DefA*
+--- :DefA {headword}
+---            Define {headword} in alternate split. 
+---            If `opts.default_split = "h"`, then `:DefA` would open a vertical 
+---            split.
+--- 
+---                                                                         *:Defs*
+--- :LsSyn {headword}
+---            List synonyms of {headword} (from moby-thesaurus by default) 
+---            in horizontal split
+
+-- TODO:
+--
+--                                                                         *:Defp*
+-- :Defp {prefix}
+--            List words with the specified {prefix}.
+-- 
+
+
 -- User commands
 local function bind_nofile()
 	vim.api.nvim_create_user_command("Nofile", function(_)
@@ -163,9 +172,16 @@ local function bind_nofile()
 end
 
 local function bind_define()
-	vim.api.nvim_create_user_command("Define", function(options)
+
+	vim.api.nvim_create_user_command("Def", function(options)
 		define(options.fargs[1], opts.default_split)
 	end, { nargs = 1 }) -- allow exactly zero arguments
+
+	vim.api.nvim_create_user_command("DefA", function(options)
+		define(options.fargs[1], toggle_orientation(opts.default_split))
+	end, { nargs = 1 }) -- allow exactly zero arguments
+
+
 end
 
 local function bind_list_synonyms()
@@ -186,7 +202,10 @@ local function set_keymaps(prefix)
 	end, { desc = "Define visual selection" })
 
 	vim.keymap.set("n", prefix .. "da", function()
-		define(vim.fn.expand("<cWORD>"), toggle_orientation(opts.default_split))
+		define(
+			vim.fn.expand("<cWORD>"),
+			toggle_orientation(opts.default_split)
+		)
 	end, { desc = "Define <cWORD> in alternate split (dico)" })
 
 	vim.keymap.set("v", prefix .. "da", function()
@@ -211,6 +230,7 @@ function M.setup(options)
 		bind_nofile()
 	end
 	bind_define()
+  bind_list_synonyms()
 	-- keymaps
 	set_keymaps(opts.map_prefix)
 end
