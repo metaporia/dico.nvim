@@ -44,9 +44,9 @@ local M = {}
 --minidoc_replace_start opts = {
 local default_opts = {
 	--minidoc_replace_end
-	default_split = "h",
+	default_split = "h", -- window split orientation
 	enable_nofile = false, -- by default disable creating `Nofile` command
-	map_prefix = "<leader>",
+	map_prefix = "<leader>", -- default prefix for keymappings
 }
 --minidoc_afterlines_end
 

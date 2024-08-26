@@ -3,21 +3,25 @@
 What is it? A plugin to provide bindings to query via the dico client either
 (i) a local DICT server or (ii) GNU's [DICT server](dicoweb.gnu.org.ua).
 
+For a vim compatible version see
+[dico-vim](https://github.com/metaporia/dico-vim)
+
 
 ## Dependencies
 
-* Ideally (there is a remote default), a local DICT server on the standard port
-  2628  for
-  dockerized version of GNU's DICT server dicod v2.4); and
+* Ideally, a local DICT server on the standard port 2628. Either dicod or dictd
+  will do. See below for pre-configured options.
 * GNU's DICT client `dico` version >= 2.4.
 * fold from GNU coreutils
 
 
-**NOTE** There are two ready-made dicod servers pre-configured with good
-dictionaries:
-- [dicod-docker](https://github.com/metaporia/dot/tree/489cd70eae8eb4b48b4b02637578d216d76b759f/overlays/dico),
-  a dockerized DICT server; and
-- a nixpkgs [overlay](https://github.com/metaporia/dot/) and [nixos module](https://github.com/metaporia/dot/blob/489cd70eae8eb4b48b4b02637578d216d76b759f/home/modules/dicod.nix)
+
+> [!NOTE]
+> There are two ready-made dicod servers pre-configured with good
+> dictionaries:
+> - [dicod-docker](https://github.com/metaporia/dot/tree/489cd70eae8eb4b48b4b02637578d216d76b759f/overlays/dico),
+>   a dockerized DICT server; and
+> - a nixpkgs [overlay](https://github.com/metaporia/dot/) and [nixos module](https://github.com/metaporia/dot/blob/489cd70eae8eb4b48b4b02637578d216d76b759f/home/modules/dicod.nix)
 
 Note that at the moment the remote default DICT server (at [dicoweb.gnu.org.ua]())
 is _not_ configurable.
@@ -27,24 +31,36 @@ is _not_ configurable.
 
 Add the following to your [neo]vim dotfile:
 
+<details>
+    <summary>With <a href="https://github.com/junegunn/vim-plug">junegunn/vim-plug</a>
+    </summary>
 ```vim
-Plug "https://gitlab.com/metaporia/dico-vim"
+Plug "metaporia/dico.nvim"
 ```
+</details>
 
-I have not tested `dico-vim` with other plugin managers. Its directory structure
-does, however, conform to pathogen's specification; and I see no reason why it
-shouldn't work with vanilla vim's package management facility.
-
+<details>
+    <summary>With <a href="https://github.com/folke/lazy.nvim">folke/lazy.nvim</a>
+    </summary>
+```vim
+{ "metaporia/dico.nvim", config = true}
+```
+</details>
 
 ## Configuration
 
-Set `g:dico_vim_map_keys = 1` to override the default and enable the below
-key-mappings.
+See the [helpfile](doc/dico-nvim.txt) `:h dico.nvim` for more details.
 
-Set `g:dico_vim_prefix = <custom-prefix>` to override the default prefix
-`<leader>`; naturally, this setting has no effect if `g:dico_vim_map_keys = 0`.
+### Default Configuration
 
+```lua
+{
+	default_split = "h", -- window split orientation
+	map_prefix = "<leader>", -- default prefix for keymappings
+	enable_nofile = false, -- Expose user command `Nofile` used to open scratch buffer
+}
 
+```
 
 ## Keymaps
 
