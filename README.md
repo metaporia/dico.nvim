@@ -1,4 +1,4 @@
-# dico-vim
+# dico.nvim
 
 What is it? A plugin to provide bindings to query via the dico client either
 (i) a local DICT server or (ii) GNU's [DICT server](dicoweb.gnu.org.ua).
@@ -29,7 +29,7 @@ is _not_ configurable.
 
 ## Installation
 
-Add the following to your [neo]vim dotfile:
+Add the following to your `init.lua`:
 
 <details>
     <summary>With <a href="https://github.com/junegunn/vim-plug">junegunn/vim-plug</a>
