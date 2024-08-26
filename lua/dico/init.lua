@@ -19,19 +19,29 @@ end
 --- `M.setup`.
 local opts = default_opts
 
+---@alias orientation
+---| '"h"' # horizontal split
+---| '"v"' # vertical split
+
+local function toggle_orientation(o)
+	if o == "h" then
+		return "v"
+	else
+		return "h"
+	end
+end
+
 -- Open unwritable buffer in horizontal or vertical split according to the
 -- orientation:
 --   * "v" sets vertical
 --   * otherwise defaults to horizontal
---
----@alias orientation
----| '"h"' # horizontal split
----| '"v"' # vertical split
----@param split_orientation orientation
-local function read_only_buffer(split_orientation)
+
+---@param orientation orientation
+local function read_only_buffer(orientation)
+	orientation = orientation or opts.default_split
 	--vim.print("Opening read only buffer")
 	local cmd = "new"
-	if split_orientation == "v" then
+	if orientation == "v" then
 		cmd = "rightbelow vnew"
 	end
 	vim.cmd(cmd)
@@ -46,6 +56,7 @@ local function read_only_buffer(split_orientation)
 end
 
 local function dead_buf(orientation)
+	orientation = orientation or opts.default_split
 	local vertical = false
 	if orientation == "v" then
 		vertical = true
@@ -58,10 +69,11 @@ end
 
 --dead_buf("h")
 
----@param orientation orientation
 ---@param word string
+---@param orientation orientation
 ---@param search_strategy string?
-local function define(orientation, word, search_strategy)
+local function define(word, orientation, search_strategy)
+	orientation = orientation or opts.default_split
 	-- handle optional param
 	if search_strategy then
 		search_strategy = "-s " .. search_strategy
@@ -77,9 +89,9 @@ local function define(orientation, word, search_strategy)
 	vim.api.nvim_buf_set_lines(def_buf, 0, -1, false, definitions)
 end
 
-local function list_synonyms(orientation, word)
+local function list_synonyms(word, orientation)
+	orientation = orientation or opts.default_split
 	local sedFilter = " | sed 's/,/\\n/g' | sed 's/\\s//g' | sed -e '/^[[:space:]]*$/d'"
-	print(sedFilter)
 	local query = "dico " .. "-dmoby-thesaurus '" .. word .. "'" .. sedFilter
 	local buf = dead_buf(orientation)
 	local synonyms = vim.fn.systemlist(query)
@@ -98,43 +110,49 @@ end
 -- User commands
 local function bind_nofile()
 	vim.api.nvim_create_user_command("Nofile", function(_)
-		dead_buf("h")
+		dead_buf(opts.default_split)
 	end, { nargs = 0 }) -- allow exactly zero arguments
 end
 
 local function bind_define()
-	vim.api.nvim_create_user_command("Define", function(opts)
-		define("h", opts.fargs[1])
+	vim.api.nvim_create_user_command("Define", function(options)
+		define(options.fargs[1], opts.default_split)
 	end, { nargs = 1 }) -- allow exactly zero arguments
 end
+
+local function bind_list_synonyms()
+	vim.api.nvim_create_user_command("LsSyn", function(options)
+		list_synonyms(options.fargs[1], opts.default_split)
+	end, { nargs = 1 }) -- allow exactly zero arguments
+end
+
 
 -- keymaps
 local function set_keymaps(prefix)
 	vim.keymap.set("n", prefix .. prefix .. "dd", function()
 		--vim.print(vim.fn.expand("<cWORD>"))
-		define(opts.default_split, vim.fn.expand("<cWORD>"), nil)
+		define(vim.fn.expand("<cWORD>"), opts.default_split, nil)
 	end, { desc = "Define <cWORD> (dico)" })
 
 	vim.keymap.set("v", prefix .. prefix .. "dd", function()
-    define(opts.default_split, get_selected_text())
+		define(get_selected_text(), opts.default_split)
 	end, { desc = "Define visual selection" })
 
-	vim.keymap.set("n", prefix .. prefix .. "dv", function()
-		define("v", vim.fn.expand("<cWORD>"))
-	end, { desc = "Define <cWORD> in vertical split (dico)" })
+	vim.keymap.set("n", prefix .. prefix .. "da", function()
+		define(vim.fn.expand("<cWORD>"), toggle_orientation(opts.default_split))
+	end, { desc = "Define <cWORD> in alternate split (dico)" })
 
-	vim.keymap.set("v", prefix .. prefix .. "dv", function()
-		define("v", get_selected_text())
-	end, { desc = "Define visual selection in vertical split (dico)" })
+	vim.keymap.set("v", prefix .. prefix .. "da", function()
+		define(get_selected_text(), toggle_orientation(opts.default_split))
+	end, { desc = "Define visual selection in alternate split (dico)" })
 
 	vim.keymap.set("n", prefix .. prefix .. "ds", function()
-		list_synonyms(opts.default_split, vim.fn.expand("<cWORD>"))
+		list_synonyms(vim.fn.expand("<cWORD>"), opts.default_split)
 	end, { desc = "List synonyms (dico)" })
 
 	vim.keymap.set("v", prefix .. prefix .. "ds", function()
-		list_synonyms(opts.default_split, get_selected_text())
+		list_synonyms(get_selected_text(), opts.default_split)
 	end, { desc = "List synonyms of visual selection (dico)" })
-
 end
 
 --- Pass `DicoOptions` to `setup` in order to overrite default configuration.
