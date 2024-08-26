@@ -13,7 +13,7 @@ What is it? A plugin to provide bindings to query via the dico client either
 * fold from GNU coreutils
 
 
-[!NOTE] There are two ready-made dicod servers pre-configured with good
+**NOTE** There are two ready-made dicod servers pre-configured with good
 dictionaries:
 - [dicod-docker](https://github.com/metaporia/dot/tree/489cd70eae8eb4b48b4b02637578d216d76b759f/overlays/dico),
   a dockerized DICT server; and
